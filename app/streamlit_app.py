@@ -54,7 +54,7 @@ with tab_pred:
         h = pd.DataFrame(p["history"])
         fig = go.Figure(go.Scatter(x=h["date"], y=h["close"], name="close"))
         fig.add_trace(go.Scatter(x=[h["date"].iloc[-1]], y=[p["pred_next_close"]],
-                                 mode="markers", marker=dict(size=12), name="previsione t+1"))
+                                 mode="markers", marker={"size": 12}, name="previsione t+1"))
         st.plotly_chart(fig, use_container_width=True)
 
 with tab_lb:
