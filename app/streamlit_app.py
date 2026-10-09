@@ -6,6 +6,7 @@ import plotly.graph_objects as go
 import requests
 import streamlit as st
 
+
 def _api_url() -> str:
     if os.getenv("API_URL"):
         return os.environ["API_URL"]
