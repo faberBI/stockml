@@ -1,0 +1,27 @@
+name: CI
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_call:          # riusata dalla CD come "gate"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: { python: ["3.11", "3.12"] }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "${{ matrix.python }}", cache: pip }
+      - run: pip install -e ".[api,dev]"
+      - run: ruff check src app tests
+      - run: pytest -q          # dati sintetici: nessuna chiamata a Yahoo in CI
+
+  docker-build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -f Dockerfile.api -t stockml-api:ci .
+      - run: docker build -f Dockerfile.app -t stockml-app:ci .

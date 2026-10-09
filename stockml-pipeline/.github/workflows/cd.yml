@@ -1,0 +1,56 @@
+name: CD
+on:
+  push:
+    branches: [main]
+    paths: ["src/**", "app/**", "artifacts/**", "Dockerfile.*", "pyproject.toml"]
+  workflow_run:              # dopo ogni retrain riuscito -> nuova immagine col nuovo modello
+    workflows: ["Weekly training"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: ghcr.io/${{ github.repository }}
+
+jobs:
+  gate:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    uses: ./.github/workflows/ci.yml
+
+  publish:
+    needs: gate
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: { component: [api, app] }
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: main }  # include il commit del modello appena allenato
+      - uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile.${{ matrix.component }}
+          push: true
+          tags: |
+            ${{ env.IMAGE_PREFIX }}-${{ matrix.component }}:latest
+            ${{ env.IMAGE_PREFIX }}-${{ matrix.component }}:${{ github.sha }}
+
+  deploy:
+    needs: publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger deploy hook (Render / Railway / Fly...)
+        env:
+          API_HOOK: ${{ secrets.DEPLOY_HOOK_API }}
+          APP_HOOK: ${{ secrets.DEPLOY_HOOK_APP }}
+        run: |
+          [ -n "$API_HOOK" ] && curl -fsS -X POST "$API_HOOK" || echo "DEPLOY_HOOK_API non impostato: skip"
+          [ -n "$APP_HOOK" ] && curl -fsS -X POST "$APP_HOOK" || echo "DEPLOY_HOOK_APP non impostato: skip"
