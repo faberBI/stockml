@@ -1,0 +1,90 @@
+{
+  "meta": {
+    "trained_at": "2026-10-09T18:52:21Z",
+    "best_model": "knn",
+    "tickers": [
+      "^GSPC"
+    ],
+    "features": [
+      "ret_1",
+      "ret_5",
+      "ret_10",
+      "ret_21",
+      "vol_5",
+      "vol_21",
+      "vol_ratio",
+      "rsi_14",
+      "dist_sma_20",
+      "dist_sma_50",
+      "hl_range",
+      "volume_z"
+    ],
+    "n_rows": 2464,
+    "data_start": "2016-12-19",
+    "data_end": "2026-10-08",
+    "primary_metric": "rmse",
+    "beats_baseline": false
+  },
+  "leaderboard": [
+    {
+      "rank": 1,
+      "model": "naive_zero (baseline)",
+      "rmse": 0.011932276235410464,
+      "mae": 0.00800991746967328,
+      "hit_rate": 0.0,
+      "ic": 0.0,
+      "rmse_std": 0.00306548899997971,
+      "is_baseline": true
+    },
+    {
+      "rank": 2,
+      "model": "knn",
+      "rmse": 0.011972190604900507,
+      "mae": 0.008027947691570492,
+      "hit_rate": 0.5117073170731707,
+      "ic": -0.04634559860848551,
+      "rmse_std": 0.00309855046821601,
+      "is_baseline": false
+    },
+    {
+      "rank": 3,
+      "model": "random_forest",
+      "rmse": 0.012026725031577031,
+      "mae": 0.008115132994874635,
+      "hit_rate": 0.49317073170731707,
+      "ic": -0.04891303956577323,
+      "rmse_std": 0.003103812645899953,
+      "is_baseline": false
+    },
+    {
+      "rank": 4,
+      "model": "mlp",
+      "rmse": 0.012189606623391644,
+      "mae": 0.00820253038147078,
+      "hit_rate": 0.48097560975609754,
+      "ic": -0.038811884808298946,
+      "rmse_std": 0.0032047207004374115,
+      "is_baseline": false
+    },
+    {
+      "rank": 5,
+      "model": "ridge",
+      "rmse": 0.012236704556984421,
+      "mae": 0.008471138368879175,
+      "hit_rate": 0.4917073170731707,
+      "ic": 0.014276343252430077,
+      "rmse_std": 0.0030751205124014947,
+      "is_baseline": false
+    },
+    {
+      "rank": 6,
+      "model": "hist_gradient_boosting",
+      "rmse": 0.012859518320956725,
+      "mae": 0.008594051107024908,
+      "hit_rate": 0.5082926829268293,
+      "ic": -0.0030998327103807675,
+      "rmse_std": 0.0035997360886941623,
+      "is_baseline": false
+    }
+  ]
+}
