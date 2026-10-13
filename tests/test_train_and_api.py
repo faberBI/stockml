@@ -10,7 +10,8 @@ def test_pipeline_end_to_end(prices, tmp_project, monkeypatch):
     meta = run(prices)
     assert config.MODEL_PATH.exists()
     lb = json.loads(config.LEADERBOARD_JSON.read_text())["leaderboard"]
-    assert len(lb) == 6  # 5 modelli + baseline
+    from stockml.models import get_models
+    assert len(lb) == len(get_models()) + 1  # tutti i modelli + baseline
     assert meta["best_model"] in {r["model"] for r in lb if not r["is_baseline"]}
     assert "🏆" in config.README.read_text()
 
