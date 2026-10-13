@@ -129,6 +129,18 @@ def _boosting_libs() -> dict:
                 colsample_bytree=0.8, reg_lambda=1.0, random_state=RS, n_jobs=-1)
     except ImportError:
         pass
+        try:
+        from catboost import CatBoostRegressor
+        for d in (4, 6):
+            m[f"catboost_d{d}"] = CatBoostRegressor(
+                iterations=300, depth=d, learning_rate=0.03, l2_leaf_reg=3.0,
+                random_seed=RS, verbose=0, thread_count=-1,
+                allow_writing_files=False)  # evita la cartella catboost_info/ nel repo
+        m["catboost_d4_rmsewithunc"] = CatBoostRegressor(
+            iterations=300, depth=4, learning_rate=0.03, loss_function="Huber:delta=0.02",
+            random_seed=RS, verbose=0, thread_count=-1, allow_writing_files=False)
+    except ImportError:
+        pass
     return m
 
 
