@@ -3,7 +3,7 @@
 ![CI](https://github.com/faberBI/stockml/actions/workflows/ci.yml/badge.svg)
 ![Weekly training](https://github.com/faberBI/stockml/actions/workflows/weekly-train.yml/badge.svg)
 
-Pipeline end-to-end: **Yahoo Finance → 5 modelli ML → leaderboard → modello migliore → FastAPI → Streamlit**,
+Pipeline end-to-end: **Yahoo Finance → >50 modelli ML → leaderboard → modello migliore → FastAPI → Streamlit**,
 con retraining settimanale e CI/CD su GitHub Actions.
 
 ## 🏁 Leaderboard (aggiornata automaticamente ogni settimana)
